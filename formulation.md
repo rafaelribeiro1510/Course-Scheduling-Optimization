@@ -66,7 +66,7 @@ $W_S$: Weight that a faculty member's seniority has on the objective function
 $X$: Weight that a represents how important it is for course 6 to not be lectured by non-faculty
 
 #### Decision Variables
-$r_{f,c}$: Assignment of faculty member $f$ to course $c$f
+$r_{f,c}$: Assignment of faculty member $f$ to course $c$
 
 $s_f$: Number of course preparations above 2, for each faculty member $f$. Used for soft restriction 3
 
