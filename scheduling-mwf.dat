@@ -1,15 +1,30 @@
-{string} Course = {"CSO1", "CSO2", "CSO3", "CSO4", "CSO5", "CSO6", "CSO7", "CSO8"};
 {string} Faculty = {"Barbosa", "Castro", "Pedro", "Queiros", "contingent"};
-{float} Timeslot = {550, 620, 690, 810, 880, 950, 1045};
-float D = 60;
+{float} Day = {1, 3, 5}; // Days
+{float} Timeslot = 1..7;
+float T = [550, 620, 690, 810, 880, 950, 1045]; // Timeslots
+float Delta = 60;
 
-float L[Faculty] = [3, 2, 3, 3, 1000000000];
-float S[Faculty] = [2, 4, 6, 6, 1];
+float R[Faculty][Course] = [
+	[0, 0, 3, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 2, 0, 0],
+	[0, 0, 0, 0, 0, 2, 0, 1],
+	[2, 1, 0, 0, 0, 0, 0, 0],
+	[0, 0, 1, 0, 0, 0, 0, 0],
+	[0, 2, 1, 0, 0, 0, 0, 0],
+	[0, 3, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 2, 1, 0],
+	[0, 0, 0, 1, 1, 0, 0, 0]
+]; // Number of classes assigned to each course faculty pair
+float S[Faculty] = [2, 4, 6, 6, 1]; // Seniority
 float P[Faculty][Timeslot] = [
 	[1, 3, 3, 5, 5, 5, 0],
 	[1, 1, 1, 1, 1, 5, 5],
 	[1, 5, 5, 5, 3, 3, 0],
 	[3, 5, 5, 5, 1, 3, 3],
 	[1, 1, 1, 1, 1, 0, 0]
-];
+]; // Timeslot preference
 
+float U = 1;
+float V = 1;
+float Y = 1;
+float Z = 1;
