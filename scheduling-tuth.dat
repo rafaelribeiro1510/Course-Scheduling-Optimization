@@ -1,0 +1,22 @@
+Faculty = {"Gerardo", "Lameiras", "Machado", "Soeiro", "contingent"};
+Day = {2, 4}; // Days
+Timeslot = {1, 2, 3, 4, 5, 6, 7};
+T = [495, 590, 685, 780, 875, 970, 1080]; // Timeslots
+Delta = 85;
+
+R = [
+	[0, 0, 0, 0, 0, 2, 0, 1],
+	[2, 1, 0, 0, 0, 0, 0, 0],
+	[0, 0, 1, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 2, 1, 0],
+	[0, 0, 0, 1, 1, 0, 0, 0]
+]; // Number of classes assigned to each course faculty pair
+S = [3, 2, 10, 5, 1]; // Seniority
+P = [
+	[1, 5, 5, 1, 3, 5, 1],
+	[1, 5, 5, 5, 3, 3, 0],
+	[5, 0, 0, 0, 0, 0, 0],
+	[1, 5, 5, 5, 5, 5, 0],
+	[1, 1, 1, 1, 1, 1, 0]
+]; // Timeslot preference
+
