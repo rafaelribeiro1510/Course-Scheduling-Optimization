@@ -66,7 +66,7 @@ $W_S$: Weight that a faculty member's seniority has on the objective function
 $X$: Weight that a represents how important it is for course 6 to not be lectured by non-faculty
 
 #### Decision Variables
-$r_{f,c}$: Assignment of faculty member $f$ to course $c$
+$r_{f,c}$: Assignment of faculty member $f$ to course $c$f
 
 $s_f$: Number of course preparations above 2, for each faculty member $f$. Used for soft restriction 3
 
@@ -116,19 +116,19 @@ $T_t$: Start time of timeslot $t$
 $D$: Duration of the time slots
 > (...) sixty minutes per class on Monday, Wednesday, and Friday (MWF) or (...) 85 minutes per class on Tuesday and Thursday (TuTh) 
 
-$U$: Weight that represents how important it is for classes to avoid begining too early or ending too late in a day (soft restriction 8)
-$V$: Weight that a represents how important it is that no more than two classes of the course 3 are assigned to any full-time faculty (soft restriction 9)
-$Y$: Weight that a represents how important it is for faculty members to not lecture more than 2 consecutive classes (soft restriction 10)
-$Z$: Weight that a represents how important it is for faculty members to not lecture consecutive classes in the afternoon (soft restriction 11)
+$U$: Weight that represents how important it is for classes to avoid begining too early or ending too late in a day (soft restriction 9)
+$V$: Weight that a represents how important it is that no more than two classes of the course 3 are assigned to any full-time faculty (soft restriction 10)
+$Y$: Weight that a represents how important it is for faculty members to not lecture more than 2 consecutive classes (soft restriction 11)
+$Z$: Weight that a represents how important it is for faculty members to not lecture consecutive classes in the afternoon (soft restriction 12)
 
 #### Decision Variables
 $a_{f,c,t}$: pairing of a course/faculty pair $(f,c)$ to a timeslot $t$, taught on the period $t$.
 
-$v_f$: Number of classes of the course CSO3 above 2 assigned to each faculty member $f$. Used for soft restriction 9
+$v_f$: Number of classes of the course CSO3 above 2 assigned to each faculty member $f$. Used for soft restriction 10
 
-$y_{f,t}$: Number of consecutive classes over 2, starting at timeslot $t$, for faculty member $f$. Used for soft restriction 10
+$y_{f,t}$: Number of consecutive classes over 2, starting at timeslot $t$, for faculty member $f$. Used for soft restriction 11
 
-$z_{f,t}$: Number of consecutive classes in the afternoon, starting at timeslot $t$, for faculty member $f$. Used for soft restriction 11
+$z_{f,t}$: Number of consecutive classes in the afternoon, starting at timeslot $t$, for faculty member $f$. Used for soft restriction 12
 
 #### Objective Function
 Maximize $\displaystyle \sum_{f}\sum_{c}\sum_{t} a_{f,c,t}(P_{f,t}V + S_f W) - UU' - V \sum_{f} {v_f} - Y \sum_{f}\sum_{t} y_{f,t} - Z \sum_{f}\sum_{t} z_{f,t}$
@@ -144,27 +144,30 @@ $z_{f,t} \in \{0, 1\}$
 4. **Each full-time faculty member can be teaching at most one course at one given timeslot** :egg: 
 $\displaystyle \forall f, t: \sum_c a_{f,c,t} \leq 1$
 
-5. **Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts.**
+5. **A teacher can only teach a course he was assigned in a previous stage** :egg: 
+$\displaystyle \forall f, c, t: a_{f,c,t} \leq R_{f,c}$
+
+6. **Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts.**
 $\displaystyle \forall f: \sum_{c}\sum_{t} a_{f,c,t} = L_f$ 
 
-6. **The number of classes assigned to the faculty needs to be equal to the number of classes required for each course**
+7. **The number of classes assigned to the faculty needs to be equal to the number of classes required for each course**
 $\displaystyle \forall c: \sum_{f}\sum_{t} a_{f,c,t} = N_c$
 
-7. **At most three course classes can be assigned to the same class period**
+8. **At most three course classes can be assigned to the same class period**
 $\displaystyle \forall t: \sum_{f}\sum_{c} a_{f,c,t} \leq 3$
 
 ##### Soft restrictions
-8. **Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm**
+9. **Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm**
 $\displaystyle U' = \sum_{f} \sum_{c}\left(\sum_{t:~T_t < 9:00}{a_{f,c,t}} + \sum_{t:~T_t+D > 16:00}{a_{f,c,t}}\right)$
 *Note: $U'$ is a temporary variable*
 
-9. **Ideally, no more than two classes of the course CSO3 should be assigned to any full-time faculty**
+10. **Ideally, no more than two classes of the course CSO3 should be assigned to any full-time faculty**
 $\displaystyle \forall f \neq \alpha: \sum_{t} a_{f,3,t} \leq 2 + v_f$
 
-10. **Avoid having instructors teach more than two consecutive class periods in a day**
+11. **Avoid having instructors teach more than two consecutive class periods in a day**
 $\displaystyle \forall f, \forall t < T-2: \sum_{c} (a_{f,c,t} + a_{f,c,t+1} + a_{f,c,t+2}) \leq 2 + y_{f,t}$
 <!-- $\displaystyle \forall f: \sum_{t=1}^{T-2} (a_{f,c,t} + a_{f,c,t+1} + a_{f,c,t+2}) \leq 2 + y_{f,t}$ -->
 
-11. **as well as back-to-back classes scheduled in the afternoon**
+12. **as well as back-to-back classes scheduled in the afternoon**
 $\displaystyle \forall f, \forall t < T-1 \wedge T_t>\text{12:00}: \sum_{c} (a_{f,c,t} + a_{f,c,t+1}) \leq 1 + z_{f,t}$
 <!-- $\displaystyle \forall f: \sum_{t:~T_t>12:00}^{T-1} (a_{f,c,t} + a_{f,c,t+1}) \leq 1 + z_{f,t}$ -->
