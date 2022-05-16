@@ -9,9 +9,9 @@ float R[Faculty][Course] = ...;
 float S[Faculty] = ...;
 float P[Faculty][Timeslot] = ...;
 
-float W1 = 100;
-float W2 = 1;
-float W3 = 1;
+float W3 = 100;
+float W4 = 1;
+float W5 = 1;
 
 dvar boolean a[Faculty][Course][Day][Timeslot];
 dvar boolean y[Faculty][Day][Timeslot];
@@ -19,12 +19,12 @@ dvar boolean z[Faculty][Day][Timeslot];
 
 maximize
       sum(f in Faculty, c in Course, d in Day, t in Timeslot) (a[f,c,d,t] * P[f,t] * S[f])
-    - W1*sum(f in Faculty, c in Course, d in Day) (                                         // 11
+    - W3*sum(f in Faculty, c in Course, d in Day) (                                         // 11
         sum(t in Timeslot : T[t]       < 540) a[f,c,d,t] +
         sum(t in Timeslot : T[t]+Delta > 960) a[f,c,d,t] 
     )
-    - W2*sum(f in Faculty, d in Day, t in Timeslot) y[f,d,t]
-    - W3*sum(f in Faculty, d in Day, t in Timeslot) z[f,d,t]
+    - W4*sum(f in Faculty, d in Day, t in Timeslot) y[f,d,t]
+    - W5*sum(f in Faculty, d in Day, t in Timeslot) z[f,d,t]
     ;
 
 subject to {

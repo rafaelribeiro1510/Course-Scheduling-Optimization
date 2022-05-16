@@ -40,12 +40,12 @@ float W2 = 4;
 
 dvar float+ classes[Faculty][Course];
 dvar boolean assignment[Faculty][Course];
-dvar float+ s[Faculty];
+dvar float+ u[Faculty];
 dvar float+ v[Faculty];
 maximize
     sum(f in Faculty, c in Course) (classes[f,c] * preference[f,c] * seniority[f])
     - sum(f in Faculty : f != "contingent_MWF" && f != "contingent_TuTh") (
-        W1*s[f] +
+        W1*u[f] +
         W2*v[f]
     );
 
@@ -57,7 +57,7 @@ subject to {
     }
     forall(f in Faculty : f != "contingent_MWF" && f != "contingent_TuTh") {
         sum(c in Course) classes[f,c] == facultyLoad[f];  // 2 
-        sum(c in Course) assignment[f,c] <= 2 + s[f];	  // 6
+        sum(c in Course) assignment[f,c] <= 2 + u[f];	  // 6
         classes[f,"CSO3"] <= 2 + v[f];	                  // 7
     }
     forall(c in Course) {
