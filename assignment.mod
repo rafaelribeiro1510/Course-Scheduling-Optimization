@@ -17,7 +17,7 @@ float preference[Faculty][Course] = [
     [1, 1, 3, 0, 0, 5, 5, 0],
     
     [-1, -1, -1, -1, -1,                // Added data for soft restriction 5 
-    -2, 				                // X: Weight that a represents how important it is for course 6 to not be lectured by non-faculty
+    -2,                                 // X: Weight that a represents how important it is for course 6 to not be lectured by non-faculty
     -1, -1],
 
     [-1, -1, -1, -1, -1, -2, -1, -1]    // Contingent data is doubled since there will be different contingents for MWF and TuTh runs
