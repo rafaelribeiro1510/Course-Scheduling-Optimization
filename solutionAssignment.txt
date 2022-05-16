@@ -1,4 +1,4 @@
-Objective Function = 194
+Objective Function = 446
 R = [
     [1, 0, 2, 0, 0, 0, 0, 0],
     [0, 0, 0, 1, 0, 1, 0, 0],

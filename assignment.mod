@@ -4,7 +4,7 @@
 {string} Faculty_TuTh = {"Gerardo", "Lameiras", "Machado", "Soeiro", "contingent_TuTh"};
 
 float facultyLoad[Faculty] = [3, 2, 3, 3, 1, 3, 3, 3, 1000000000, 1000000000];
-float seniority[Faculty] = [2, 4, 3, 2, 10, 6, 6, 5, 1];
+float seniority[Faculty] = [2, 4, 3, 2, 10, 6, 6, 5, 1, 1];
 float courseLoad[Course] = [2, 6, 5, 1, 1, 6, 1, 1];
 float preference[Faculty][Course] = [
     [4, 3, 5, 0, 0, 1, 0, 0],
@@ -36,19 +36,17 @@ float qualification[Faculty][Course] = [
     [1, 1, 1, 1, 1, 1, 1, 1]
 ]; 
 float W1 = 1;
-float W2 = 1;
-float W3 = 1;
-float W4 = 2;
+float W2 = 4;
 
 dvar float+ classes[Faculty][Course];
 dvar boolean assignment[Faculty][Course];
 dvar float+ s[Faculty];
 dvar float+ v[Faculty];
 maximize
-    sum(f in Faculty, c in Course) classes[f,c] * (W1*preference[f,c] + W2*seniority[f])
+    sum(f in Faculty, c in Course) (classes[f,c] * preference[f,c] * seniority[f])
     - sum(f in Faculty : f != "contingent_MWF" && f != "contingent_TuTh") (
-        W3*s[f] +
-        W4*v[f]
+        W1*s[f] +
+        W2*v[f]
     );
 
 subject to {
