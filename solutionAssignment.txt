@@ -1,10 +1,15 @@
-Objective Function = 330
-[Barbosa] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO7, ]
-[Castro] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO6, CSO7, CSO8, ]
-[Gerardo] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO6, CSO7, CSO8, ]
-[Lameiras] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO7, CSO8, ]
-[Machado] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO7, ]
-[Pedro] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO7, CSO8, ]
-[Queiros] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO7, CSO8, ]
-[Soeiro] 	-> [CSO1, CSO2, CSO3, CSO4, CSO5, CSO6, CSO7, CSO8, ]
-[contingent] 	-> []
+Objective Function = 194
+R = [
+    [1, 0, 2, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [0, 1, 2, 0, 0, 0, 0, 0],
+    [0, 3, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0]
+];
+R = [
+    [0, 0, 0, 0, 0, 2, 0, 1],
+    [1, 2, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 3, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0]
+];

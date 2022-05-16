@@ -2,6 +2,10 @@
 	<version>1.0</version>
 	<configs>
 		<config default="true" name="Configuration1" category="opl">
+			<ref name="assignment.mod" type="model">
+			</ref>
+		</config>
+		<config default="false" name="Configuration2" category="opl">
 			<ref name="scheduling.mod" type="model">
 			</ref>
 			<ref name="scheduling-mwf.dat" type="data">
