@@ -1,121 +1,158 @@
 # Optimization Project
 **COURSE SCHEDULING IN THE COMPUTER SCIENCE AND OPTIMISATION DEPARTMENT OF MONFORT COLLEGE**
 
-## Notes from statement
+## Statement analysis
 
-- > Gerardo said, “I suggest that we model it in two stages: in stage 1, we assign courses to the faculty; in stage 2, we assign each coursefaculty pair to a class time.” Pedro liked the idea. Gerardo added, “An additional advantage is that we can split the scheduling stage into two separate problems: MWF and TuTh.”
+> Gerardo said, “I suggest that we model it in two stages: in stage 1, we assign courses to the faculty; in stage 2, we assign each coursefaculty pair to a class time.” Pedro liked the idea. Gerardo added, “An additional advantage is that we can split the scheduling stage into two separate problems: MWF and TuTh.”
 
-- > They also agreed that the preferences of senior faculty would be prioritized over those of junior faculty (...) (Table 4).
-<!-- ![](https://i.imgur.com/NyYHPqv.png) -->
+We have decided to follow Gerardo's advice and split this problem into two stages. In the first stage, we assign courses to faculties; more specifically, we find $r_{f,c}$, which is the workload of faculty member $f$ in course $c$. (workload is measured as the number of classes of a course that are lectured by that faculty member).
+
+In the second stage, we can solve the scheduling problem, split in Monday-Wednesday-Friday and Tuesday-Thursday cases separately. This is only possible because there is no faculty that teaches both in one of MWF and one of TuTh. Because of this assumption, in the first stage we must define two contingents: the contingent that will be lecturing on MWF, and the contingent that will be lecturing in TuTh.
+
+> They also agreed that the preferences of senior faculty would be prioritized over those of junior faculty (...) (Table 4).
+
+> (...) the objective of the optimization model in each of the two stages, i.e. the “course assignment” stage and the “scheduling” stage, would be maximizing the total faculty preferences
+
+This requirement is implemented in the main part of the objective functions of both stages, by multiplying preferences by seniority.
 
 ### Course Assignment Phase
 #### Hard restrictions
-- > Each faculty is assigned to only the courses that he/she is qualified to teach (Table 5). For example, Dr. Barbosa is qualified to teach all courses except CSO6 and CSO8. 
+> Each faculty is assigned to only the courses that he/she is qualified to teach (Table 5). For example, Dr. Barbosa is qualified to teach all courses except CSO6 and CSO8. 
 ![](https://i.imgur.com/pR2VsRv.png)
 
-Note: We will assume that contingent faculty can be qualified to teach any course.
+Restriction 1. We are assuming that contingent faculty are qualified to teach any course.
 
-#### Soft restrictions
-- > (...) he would like all courses, and particularly CSO6, to be taught by full-time faculty, if possible
-
-- > Ideally, the number of preparations (different courses that each faculty taught per semester) for each full-time faculty would be no more than two.
-
-### Scheduling Phase
-#### Hard restrictions
-- > Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts (Table 4).
+> Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts (Table 4).
 ![](https://i.imgur.com/NyYHPqv.png)
 
-- > The number of classes assigned to the faculty needs to be equal to the number of classes required for each course (Table 6). For example, the CSO department must offer exactly five classes of CSO3 in the Spring 2023 semester over all faculty due to the student demand.
+Restriction 2.
+
+> The number of classes assigned to the faculty needs to be equal to the number of classes required for each course (Table 6). For example, the CSO department must offer exactly five classes of CSO3 in the Spring 2023 semester over all faculty due to the student demand.
 ![](https://i.imgur.com/cmR6dSp.png)
 
-- > At most three course classes can be assigned to the same class period based on allotments determined by the Assistant Dean. In other words, no more than three classes of one or multiple CSO courses can be scheduled in the same class period.
-
+Restriction 3.
 
 #### Soft restrictions
-- > Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm
+> (...) he would like all courses, and particularly CSO6, to be taught by full-time faculty, if possible
 
-- > Ideally, no more than two classes of the course CSO3 should be assigned to any full-time faculty because of the extra workload emanating from the lab.
+Restriction 5.
 
-- > (...) it would be reasonable to try to avoid having instructors teach more than two consecutive class periods in a day
+> Ideally, the number of preparations (different courses that each faculty taught per semester) for each full-time faculty would be no more than two.
 
- - > In fact, he did not have a pleasant experience with back-to-back classes scheduled in the afternoon
+Restriction 6.
 
+> Ideally, no more than two classes of the course CSO3 should be assigned to any full-time faculty because of the extra workload emanating from the lab.
 
-### Objective Function
+Restriction 7.
 
-- > (...) the objective of the optimization model in each of the two stages, i.e. the “course assignment” stage and the “scheduling” stage, would be maximizing the total faculty preferences
-![](https://i.imgur.com/9q4ZqLz.png)
+#### Preferences
 
+![](https://i.imgur.com/kyISg0Q.png)
+
+### Scheduling Phase
+
+> (...) sixty minutes per class on Monday, Wednesday, and Friday (MWF) or (...) 85 minutes per class on Tuesday and Thursday (TuTh) 
+
+Translated as $\Delta$, a parameter used in restriction 11.
+
+#### Hard restrictions
+
+> At most three course classes can be assigned to the same class period based on allotments determined by the Assistant Dean. In other words, no more than three classes of one or multiple CSO courses can be scheduled in the same class period.
+
+Restriction 10.
+
+#### Soft restrictions
+> Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm
+
+Restriction 11.
+
+> (...) it would be reasonable to try to avoid having instructors teach more than two consecutive class periods in a day
+
+Restriction 12.
+
+> In fact, he did not have a pleasant experience with back-to-back classes scheduled in the afternoon
+
+Restriction 13.
+
+### Preferences
+
+![](https://i.imgur.com/GCKLEDT.png)
+
+![](https://i.imgur.com/2SubsVx.png)
 
 ## Formulation
 ### Course Assignment Phase
 #### Sets and Indices
-- Courses \(C\): {$CS01$, $CS02$, $CS03$, $CS04$, $CS05$, $CS06$, $CS07$, $CS08$}
-- Faculty Members (F): {*Barbosa*, *Castro*, *Gerardo*, *Lameiras*, *Machado*, *Pedro*, *Queirós*, *Soeiro*, *contingent*}
-To simplify, this set can be represented by the initials of each name, with *contingent* represented as $\alpha$
-
+- Courses ($C$): {$CS01$, $CS02$, $CS03$, $CS04$, $CS05$, $CS06$, $CS07$, $CS08$}
+To simplify, each course can be represented by its number, from 1 to 8.
+- Faculty members ($F$): {*Barbosa*, *Castro*, *Gerardo*, *Lameiras*, *Machado*, *Pedro*, *Queirós*, *Soeiro*, *contingent MWF*, *contingent TuTh*}
+To simplify, this set can be represented by the initials of each name (because initials do not repeat: B, C, G, L, M, P, Q, S), with *contingents* represented as $\alpha$ and $\beta$ for MWF and TuTh respectively.
 
 #### Parameters
-$L_f$: Course load for faculty member $f$, as in, number of classes taught in a week
 $S_f$: Seniority of faculty member $f$
+$L_f$: Course load for faculty member $f$, as in, number of classes taught in a week
 
 $N_c$: Required number of classes for course $c$
 
 $P_{f,c}$: Preference of faculty member $f$ for course $c$
 $Q_{f,c}$: Qualification of faculty member $f$ for course $c$
 
-$W_1$: Weight that a faculty member's preference has on the objective function
-$W_2$: Weight that a faculty member's seniority has on the objective function
 $X$: Weight that a represents how important it is for course 6 to not be lectured by non-faculty (soft restriction 5)
-$W_3$: Weight that represents how important it is that no more than 2 courses are assigned to any full-time faculty (soft restriction 6)
-$W_4$: Weight that represents how important it is that no more than 2 classes of the course 3 are assigned to any full-time faculty (soft restriction 7)
-
+$W_1$: Weight that represents how important it is that no more than 2 courses are assigned to any full-time faculty (soft restriction 6)
+$W_2$: Weight that represents how important it is that no more than 2 classes of the course 3 are assigned to any full-time faculty (soft restriction 7)
 
 #### Decision Variables
 $r_{f,c}$: Number of classes of course $c$ given by faculty member $f$ 
+$b_{f,c}$: Assignment of faculty member $f$ to course $c$, boolean variable that is 1 when $r_{f,c} \geq 1$ and 0 when $r_{f,c} = 0$
 
-$p_{f,c}$: Assignment of faculty member $f$ to course $c$, boolean variable that is 1 when $r_{f,c} \geq 1$ and 0 when $r_{f,c} = 0$
-
-$s_f$: Number of course preparations above 2, for each full-time faculty member $f$. Used for soft restriction 6
+$u_f$: Number of course preparations above 2, for each full-time faculty member $f$. Used for soft restriction 6
 
 $v_f$: Number of classes of the course CSO3 above 2 assigned to each full-time faculty member $f$. Used for soft restriction 7
 
 #### Objective Function
-Maximize $\displaystyle \sum_{f}\sum_{c} r_{f,c}(P_{f,c}W_1 + S_f W_2) - W_3 \sum_{f} {s_f} - W_4 \sum_{f} {v_f}$
+Maximize $\displaystyle \sum_{f}\sum_{c} r_{f,c} P_{f,c} S_f - W_1 \sum_{f} {u_f} - W_2 \sum_{f} {v_f}$
 
 #### Constraints
 ##### Hard restrictions
 **Domain constraints**
 $r_{f,c} \in \mathbb{Z}_0^+$
-$p_{f,c} \in \{0,1\}$
-$s_f \in \mathbb{Z}_0^+$
+$b_{f,c} \in \{0,1\}$
+$u_f \in \mathbb{Z}_0^+$
 $v_f \in \mathbb{Z}_0^+$
-<!-- $\displaystyle s_f = \max\left\{0, \sum_c {r_{f,c}} - 2\right\}$ -->
 
 1. **Each faculty is assigned to only the courses that he/she is qualified to teach.**
+
 $\displaystyle \forall f, c: r_{f,c}(1-Q_{f,c}) = 0$
 
 2. **Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts**
+
 $\displaystyle \forall f \neq \alpha: \sum_{c} r_{f,c} = L_f$
 
 3. **The number of classes assigned to faculties needs to be equal to the number of classes required for each course**
+
 $\displaystyle \forall c: \sum_{f} r_{f,c} = N_c$
 
-4. **Relate $r_{f,c}$ to its boolean counterpart $p_{f,c}$**
-$\displaystyle \forall f, c: r_{f,c} \leq p_{f,c} \cdot L_f$
-$\displaystyle \forall f, c: r_{f,c} \geq p_{f,c}$
+4. **Relate $r_{f,c}$ to its boolean counterpart $b_{f,c}$**
+
+$\displaystyle \forall f, c: r_{f,c} \leq b_{f,c} \cdot L_f$
+$\displaystyle \forall f, c: r_{f,c} \geq b_{f,c}$
 
 ##### Soft restrictions
 5. **All courses, and particularly CSO6, are to be taught by full-time faculty, if possible.**
-This soft restriction is encoded by defining $P_{\alpha,c}$. Namely:
-$\forall c \neq 6, P_{\alpha, c} = -1$
-$P_{\alpha, 6} = -X$
+
+This soft restriction is encoded by defining $P_{\alpha,c}$ and $P_{\beta,c}$. Namely:
+$\forall c \neq 6, P_{\alpha, c} = P_{\beta, c} = -1$
+$P_{\alpha, 6} = P_{\beta, 6} = -X$
+
+We assumed $P_{\alpha, c} = P_{\beta, c} = -1$ by default because we reasoned its preference should be lower than any possible preference made explicit by the full-time faculty members; since the least preference among faculties was 0, we chose a negative value. Also, for a matter of simplicity, we decided to choose -1 as a negative number with a small magnitude.
 
 6. **Ideally, the number of preparations (different courses that each faculty taught per semester) for each full-time faculty would be no more than two.**
-$\displaystyle \forall f \neq \alpha: \sum_{c} p_{f,c} \leq 2 + s_f$
+
+$\displaystyle \forall f \neq \alpha, \beta: \sum_{c} b_{f,c} \leq 2 + u_f$
 
 7. **Ideally, no more than two classes of the course CSO3 should be assigned to any full-time faculty**
-$\displaystyle \forall f \neq \alpha: r_{f,3} \leq 2 + v_f$
+
+$\displaystyle \forall f \neq \alpha, \beta: r_{f,3} \leq 2 + v_f$
 
 ---
 
@@ -123,26 +160,27 @@ $\displaystyle \forall f \neq \alpha: r_{f,3} \leq 2 + v_f$
 The MWF and TuTh problems have the same formulation, with different input set and duration $\Delta$ for Timeslots
 
 #### Sets and Indices
+- Timeslot IDs: {1,2,3,4,5,6,7}
+
+This is because both MWF and TuTh have seven timeslots, and this formalization makes it easier to translate this problem for the solver.
+
 - MWF Timeslots: {9:10, 10:20, 11:30, 13:30, 14:40, 15:50, 17:25}
 - TuTh Timeslots: {8:15, 9:50, 11:25, 13:00, 14:35, 16:10, 18:00}
 
+We represented timeslots by the number of minutes from midnight that day; we therefore represented 9:10 as $9 \cdot 60+10=550$. This makes arithmetics with time easier without needing to implement a complex data type.
+
+- MWF Days: {Monday, Wednesday, Friday}
+- TuTh Days: {Tuesday, Thursday}
+
 #### Parameters
-$R_{f,c}$: Assignment of faculty member $f$ to course $c$. Result of previous stage; i.e., how much load from course $c$ was allocated to faculty member $f$
-
-<!-- $L_f$: Course load for faculty member $f$, as in, number of classes taught in a week -->
-
 $S_f$: Seniority of faculty member $f$
+
+$R_{f,c}$: Number of classes of course $c$ given by faculty member $f$. Result of previous stage
 
 $P_{f,t}$: Preference of faculty member $f$ for timeslot $t$
 
-$D_d$: Day of week; can be $\{1,3,5\}$ and $\{2, 4\}$.
-
-$T_t$: Start time of timeslot $t$
-$\Delta$: Duration of the time slots
-> (...) sixty minutes per class on Monday, Wednesday, and Friday (MWF) or (...) 85 minutes per class on Tuesday and Thursday (TuTh) 
-
-$W_1$: Weight that a faculty member's preference of slots has on the objective function
-$W_2$: Weight that a faculty member's seniority has on the objective function
+$T_t$: Start time of timeslot $t$, in minutes since the day started (0:00)
+$\Delta$: Duration of the time slots, in minutes
 
 $W_3$: Weight that represents how important it is for classes to avoid begining too early or ending too late in a day (soft restriction 11)
 $W_4$: Weight that a represents how important it is for faculty members to not lecture more than 2 consecutive classes (soft restriction 12)
@@ -156,7 +194,8 @@ $y_{f,d,t}$: Number of consecutive classes over 2, starting at timeslot $t$ of d
 $z_{f,d,t}$: Number of consecutive classes in the afternoon, starting at timeslot $t$ of day $d$, for faculty member $f$. Used for soft restriction 13
 
 #### Objective Function
-Maximize $\displaystyle \sum_{f}\sum_{c}\sum_{d}\sum_{t} a_{f,c,d,t}(P_{f,t} W_1 + S_f W_2) - W_3 U' - W_4 \sum_{f}\sum_{d}\sum_{t} y_{f,d,t} - W_5 \sum_{f}\sum_{d}\sum_{t} z_{f,d,t}$
+Maximize
+$\displaystyle \sum_{f}\sum_{c}\sum_{d}\sum_{t} a_{f,c,d,t} P_{f,t} S_f - W_3 U - W_4 \sum_{f}\sum_{d}\sum_{t} y_{f,d,t} - W_5 \sum_{f}\sum_{d}\sum_{t} z_{f,d,t}$
 
 #### Constraints
 ##### Hard restrictions
@@ -165,29 +204,111 @@ $a_{f,c,d,t} \in \{0, 1\}$
 $y_{f,d,t} \in \{0, 1\}$
 $z_{f,d,t} \in \{0, 1\}$
 
-8. **Each full-time faculty member can be teaching at most one course at one given timeslot** :egg: 
+8. **Each full-time faculty member can be teaching at most one course at one given timeslot**
+
 $\displaystyle \forall f, d, t: \sum_c a_{f,c,d,t} \leq 1$
 
-9. **A teacher must lecture exactly as many timeslots of a course as he was assigned in a previous stage** :egg: 
+9. **A teacher must lecture exactly as many timeslots of a course as he was assigned in a previous stage**
+
 $\displaystyle \forall f, c: \sum_d\sum_t a_{f,c,d,t} = R_{f,c}$
 
-<!-- 
-6. **Each full-time faculty member’s actual course load must be equal to his/her required course load per semester according to their contracts**
-$\displaystyle \forall f: \sum_{c}\sum_{t} a_{f,c,t} = L_f$ 
--->
+Restrictions 8 and 9 were added by us, because we need to keep the decision variables' semantics consistent with the values that they may take.
 
 10. **At most three course classes can be assigned to the same class period**
+
 $\displaystyle \forall d,t: \sum_{f}\sum_{c} a_{f,c,d,t} \leq 3$
 
 ##### Soft restrictions
 11. **Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm**
-$\displaystyle U' = \sum_{f} \sum_{c} \sum_{d}\left(\sum_{t:~T_t < 9:00}{a_{f,c,d,t}} + \sum_{t:~T_t+\Delta > 16:00}{a_{f,c,d,t}}\right)$
-*Note: $U'$ is a temporary variable*
+
+$\displaystyle U = \sum_{f} \sum_{c} \sum_{d}\left(\sum_{t:~T_t < 9:00}{a_{f,c,d,t}} + \sum_{t:~T_t+\Delta > 16:00}{a_{f,c,d,t}}\right)$
+
+*Note: $U$ is a temporary variable*
 
 12. **Avoid having instructors teach more than two consecutive class periods in a day**
-$\displaystyle \forall f, d, \forall t < T-2: \sum_{c} (a_{f,c,d,t} + a_{f,c,d,t+1} + a_{f,c,d,t+2}) \leq 2 + y_{f,d,t}$
-<!-- $\displaystyle \forall f: \sum_{t=1}^{T-2} (a_{f,c,t} + a_{f,c,t+1} + a_{f,c,t+2}) \leq 2 + y_{f,t}$ -->
 
-13. **as well as back-to-back classes scheduled in the afternoon**
+$\displaystyle \forall f, d, \forall t < T-2: \sum_{c} (a_{f,c,d,t} + a_{f,c,d,t+1} + a_{f,c,d,t+2}) \leq 2 + y_{f,d,t}$
+
+13. **As well as back-to-back classes scheduled in the afternoon**
+
 $\displaystyle \forall f, d, \forall t < T-1 \wedge T_t \geq \text{12:00}: \sum_{c} (a_{f,c,d,t} + a_{f,c,d,t+1}) \leq 1 + z_{f,d,t}$
-<!-- $\displaystyle \forall f: \sum_{t:~T_t>12:00}^{T-1} (a_{f,c,t} + a_{f,c,t+1}) \leq 1 + z_{f,t}$ -->
+
+## Results
+
+We used the following weights:
+
+$W_1 = 1$
+$W_2 = 4$
+$W_3 = 100$
+$W_4 = 1$
+$W_5 = 1$
+$X = 2$
+
+We initially set all weights to 1 by default, and then balanced some weights until all soft restrictions were reasonably respected. For some restrictions (the ones using $W_1$, $W_4$ and $W_5$) did not require changes because they were only used to untie cases where the main part of the objective function (which contains information on preferences and seniority) were tied. However, for the soft restrictions that are related to $W_2$ and $W_3$ to be taken into account, we had to further increase their values.
+
+### Course Assignment Phase
+
+Objective Function = 446
+
+| Faculty         | CSO1 | CSO2 | CSO3 | CSO4 | CSO5 | CSO6 | CSO7 | CSO8 |
+|-----------------|------|------|------|------|------|------|------|------|
+| Barbosa         | 1    | 0    | 2    | 0    | 0    | 0    | 0    | 0    |
+| Castro          | 0    | 0    | 0    | 1    | 0    | 1    | 0    | 0    |
+| Gerardo         | 0    | 0    | 0    | 0    | 0    | 2    | 0    | 1    |
+| Lameiras        | 1    | 2    | 0    | 0    | 0    | 0    | 0    | 0    |
+| Machado         | 0    | 0    | 1    | 0    | 0    | 0    | 0    | 0    |
+| Pedro           | 0    | 1    | 2    | 0    | 0    | 0    | 0    | 0    |
+| Queiros         | 0    | 3    | 0    | 0    | 0    | 0    | 0    | 0    |
+| Soeiro          | 0    | 0    | 0    | 0    | 0    | 3    | 0    | 0    |
+| contingent MWF  | 0    | 0    | 0    | 0    | 1    | 0    | 1    | 0    |
+| contingent TuTh | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    |
+
+### Scheduling Phase
+
+#### MWF
+
+Objective Function = 220
+
+| Day | Monday | Wednesday | Friday |
+|-|-|-|-|
+| 09:10 | (Castro-CSO4) |  |  | 
+| 10:20 | (Castro-CSO6), (Pedro-CSO3) | (Pedro-CSO2), (Queiros-CSO2) |  | 
+| 11:30 | (Queiros-CSO2), (contingent-CSO5) |  |  | 
+| 13:30 | (Barbosa-CSO3), (Pedro-CSO3), (Queiros-CSO2) | (Barbosa-CSO1) | (Barbosa-CSO3) | 
+| 14:40 | (contingent-CSO7) |  |  | 
+| 15:50 |  |  |  | 
+| 17:25 |  |  |  | 
+
+#### TuTh
+
+Objective Function = 150
+
+| Day | Tuesday | Thursday |
+|-|-|-|
+| 08:15 |  |  | 
+| 09:50 | (Gerardo-CSO6), (Lameiras-CSO2), (Soeiro-CSO6) | (Gerardo-CSO6), (Lameiras-CSO1) | 
+| 11:25 | (Gerardo-CSO8), (Soeiro-CSO6) |  | 
+| 13:00 | (Lameiras-CSO2) |  | 
+| 14:35 | (Soeiro-CSO6) | (Machado-CSO3) | 
+| 16:10 |  |  | 
+| 18:00 |  |  | 
+
+## Discussion
+
+### How to handle seniority
+
+We initially used seniority as an addictive factor to the score of an allocation, so that for the course assignment stage the score for an assignment $r_{f,c}$ was $r_{f,c} (A \cdot P_{f,c} + B \cdot S_f)$, and for the scheduling stage the score for an assignment $a_{f,c,d,t}$ was $C \cdot P_{f,d,t} + D \cdot S_f$. We then realised this formulation did not respect the intended interpretation of seniority, as separating the first component in the course assignment stage we would end up with $r_{f,c} A P_{f,c}$, which meant that senior faculties' opinions were not being valued according to their seniority. The proper way to interpret seniority is that the opinions of more senior faculties are more important, so we need to multiply preferences by seniority, not add them.
+
+### Hard and soft constraints
+
+The role of hard and soft constraints in our formulations are textbook: hard constraints must be enforced in order for the solution to be valid, whereas soft constraints are incorporated as penalties on the objective function. For each soft constraint, we devised a way to quantify how much a given solution violates that soft constraint, and then multiplied that score by a weight parameter for it to become a penalty in the objective function.
+
+### Alternative solution
+
+We believe that the steps suggested by the statement in order to split the problem into two, and further split the second problem's input into two sets, could in reality be ignored, since despite both problems having complex formulations, neither had terrible performance when being solved by CPLEX. Therefore, we could achieve an even more optimized solution.
+
+The required reformulation would be somewhat simple, as we only need to use the parameters and decision variables of the two stages and easily combine the objective functions.
+
+### Enhancements
+
+An apparent problem with the final solutions found was that the schedules were denser on the first days of the sets. This is a known problem in the realm of scheduling optimization problems, and can be somewhat solved by imposing a soft constraint requiring all days in a schedule to have about the same number of classes. We however believe this constraint would make the problem non-linear when using a trivial implementation with the absolute value function.
