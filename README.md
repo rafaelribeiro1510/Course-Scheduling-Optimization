@@ -1,2 +1,2 @@
-# Course-Scheduling-Optimzation
+# Course-Scheduling-Optimization
 Final project for Course O
