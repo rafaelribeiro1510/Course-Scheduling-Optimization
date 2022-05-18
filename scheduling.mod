@@ -27,7 +27,7 @@ maximize
     ;
 
 subject to {
-    forall(f in Faculty, t in Timeslot) sum(c in Course) a[f,c,t] <= 1;       // 8
+    forall(f in Faculty : f != "contingent", t in Timeslot) sum(c in Course) a[f,c,t] <= 1;       // 8
     forall(f in Faculty, c in Course) sum(t in Timeslot) a[f,c,t] == R[f,c];  // 9
     forall(t in Timeslot) sum(f in Faculty, c in Course) a[f,c,t] <= 3;       // 10
     forall(f in Faculty, t in Timeslot : (t+2) in Timeslot) 
