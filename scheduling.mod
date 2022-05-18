@@ -18,7 +18,7 @@ dvar boolean z[Faculty][Timeslot];
 
 maximize
       sum(f in Faculty, c in Course, t in Timeslot) (a[f,c,t] * P[f,t] * S[f])
-    - W3*sum(f in Faculty, c in Course) (                                         // 11
+    - W3*sum(f in Faculty, c in Course) (                                     // 11
         sum(t in Timeslot : T[t]       < 540) a[f,c,t] +
         sum(t in Timeslot : T[t]+Delta > 960) a[f,c,t] 
     )
@@ -27,13 +27,13 @@ maximize
     ;
 
 subject to {
-    forall(f in Faculty, t in Timeslot) sum(c in Course) a[f,c,t] <= 1;         // 8
-    forall(f in Faculty, c in Course) sum(t in Timeslot) a[f,c,t] == R[f,c];    // 9
-    forall(t in Timeslot) sum(f in Faculty, c in Course) a[f,c,t] <= 3;         // 10
+    forall(f in Faculty, t in Timeslot) sum(c in Course) a[f,c,t] <= 1;       // 8
+    forall(f in Faculty, c in Course) sum(t in Timeslot) a[f,c,t] == R[f,c];  // 9
+    forall(t in Timeslot) sum(f in Faculty, c in Course) a[f,c,t] <= 3;       // 10
     forall(f in Faculty, t in Timeslot : (t+2) in Timeslot) 
-        sum(c in Course) (a[f,c,t] + a[f,c,t+1] + a[f,c,t+2]) <= 2 + y[f,t];        // 12
+        sum(c in Course) (a[f,c,t] + a[f,c,t+1] + a[f,c,t+2]) <= 2 + y[f,t];  // 12
     forall(f in Faculty, t in Timeslot : (t+1) in Timeslot && T[t] >= 720) 
-        sum(c in Course) (a[f,c,t] + a[f,c,t+1]) <= 1 + z[f,t];                       // 13
+        sum(c in Course) (a[f,c,t] + a[f,c,t+1]) <= 1 + z[f,t];               // 13
 }
 
 execute OUTPUT_RESULTS {
