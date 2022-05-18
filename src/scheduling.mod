@@ -45,7 +45,7 @@ execute OUTPUT_RESULTS {
        return ret + s;
    }
   
-   var file = new IloOplOutputFile("solutionScheduling.md", true);
+   var file = new IloOplOutputFile("solution-scheduling.md", true);
    file.writeln("Objective Function = ", cplex.getObjValue());
 
    file.write("| Time | - |\n");
