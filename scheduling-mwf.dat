@@ -1,5 +1,4 @@
 Faculty = {"Barbosa", "Castro", "Pedro", "Queiros", "contingent"};
-Day = {"Monday", "Wednesday", "Friday"}; // Days
 Timeslot = {1, 2, 3, 4, 5, 6, 7};
 T = [550, 620, 690, 810, 880, 950, 1045]; // Timeslots
 Delta = 60;
