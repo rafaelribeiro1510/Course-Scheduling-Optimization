@@ -13,7 +13,7 @@
 
 We have decided to follow Gerardo's advice and split this problem into two stages. In the first stage, we assign courses to faculties; more specifically, we find $r_{f,c}$, which is the workload of faculty member $f$ in course $c$ (that is, the number of classes of a course that are lectured by that faculty member).
 
-In the second stage, we can solve the scheduling problem, split in Monday-Wednesday-Friday and Tuesday-Thursday cases separately. This is only possible because there is no faculty that teaches both in MWF and TuTh timeslots (we assumed that the faculties which do not appear in a given preference table do not teach in the corresponding days). Because of this decision, in the first stage we must define two contingents: the contingent that will be lecturing on MWF, and the contingent that will be lecturing in TuTh.
+In the second stage, we can solve the scheduling problem, split in Monday-Wednesday-Friday and Tuesday-Thursday cases separately. This is only possible because there is no faculty that teaches both in MWF and TuTh time slots (we assumed that the faculties which do not appear in a given preference table do not teach in the corresponding days). Because of this decision, in the first stage we must define two contingents: the contingent that will be lecturing on MWF, and the contingent that will be lecturing in TuTh.
 
 > They also agreed that the preferences of senior faculty would be prioritized over those of junior faculty (...) (Table 4).
 
@@ -113,9 +113,9 @@ $W_2$: Weight that represents how important it is that no more than 2 classes of
 $r_{f,c}$: Number of classes of course $c$ given by faculty member $f$ 
 $b_{f,c}$: Assignment of faculty member $f$ to course $c$, boolean variable that is 1 when $r_{f,c} \geq 1$ and 0 when $r_{f,c} = 0$
 
-$u_f$: Number of course preparations above 2, for each full-time faculty member $f$. Used for soft constraint 6
+$u_f$: Number of course preparations above 2, for each full-time faculty member $f$. *Used for soft constraint 6*
 
-$v_f$: Number of classes of the course CSO3 above 2 assigned to each full-time faculty member $f$. Used for soft constraint 7
+$v_f$: Number of classes of the course CSO3 above 2 assigned to each full-time faculty member $f$. *Used for soft constraint 7*
 
 #### Objective Function
 Maximize $\displaystyle \sum_{f}\sum_{c} r_{f,c} P_{f,c} S_f - W_1 \sum_{f} {u_f} - W_2 \sum_{f} {v_f}$
@@ -166,45 +166,44 @@ $\displaystyle \forall f \notin \{\alpha, \beta\}: r_{f,3} \leq 2 + v_f$
 ---
 
 ### Scheduling Phase
-The MWF and TuTh problems have the same formulation, with different input set and duration $\Delta$ for Timeslots
+The MWF and TuTh problems have the same formulation, with different input set and duration $\Delta$ for time slots.
 
 #### Sets and Indices
-- Timeslot IDs: {1,2,3,4,5,6,7}
+- Timeslot IDs: $\{1,2,3,4,5,6,7\}$
 
-This is because both MWF and TuTh have seven timeslots, and this formalization makes it easier to translate this problem for the solver.
+Both MWF and TuTh have seven time slots, and this formalization makes it easier to translate this problem for the solver.
 
-- MWF Timeslots: {9:10, 10:20, 11:30, 13:30, 14:40, 15:50, 17:25}
-- TuTh Timeslots: {8:15, 9:50, 11:25, 13:00, 14:35, 16:10, 18:00}
+- MWF time slots: $\{\text{9:10}, \text{10:20}, \text{11:30}, \text{13:30}, \text{14:40}, \text{15:50}, \text{17:25}\}$
+- TuTh time slots: $\{\text{8:15}, \text{9:50}, \text{11:25}, \text{13:00}, \text{14:35}, \text{16:10}, \text{18:00}\}$
 
-We represented timeslots by the number of minutes from midnight that day; we therefore represented 9:10 as $9 \cdot 60+10=550$. This makes arithmetics with time easier without needing to implement a complex data type.
+We chose to represent time slots as the number of minutes after midnight that day; for instance, 9:10 AM is represented as $9 \times 60+10=550$. This simplifies the calculations involving time without requiring the implementation of a more complex data type.
 
-- MWF Days: {Monday, Wednesday, Friday}
-- TuTh Days: {Tuesday, Thursday}
+- MWF Days: $\{\text{Monday}, \text{Wednesday}, \text{Friday}\}$
+- TuTh Days: $\{\text{Tuesday}, \text{Thursday}\}$
 
 #### Parameters
 $S_f$: Seniority of faculty member $f$
 
-$R_{f,c}$: Number of classes of course $c$ given by faculty member $f$. Result of previous stage
+$R_{f,c}$: Number of classes of course $c$ given by faculty member $f$ (result from the previous stage).
 
-$P_{f,t}$: Preference of faculty member $f$ for timeslot $t$
+$P_{f,t}$: Preference of faculty member $f$ for time slot $t$
 
-$T_t$: Start time of timeslot $t$, in minutes since the day started (0:00)
+$T_t$: Start time of time slot $t$, in minutes since the beginning of the day (0:00)
 $\Delta$: Duration of the time slots, in minutes
 
-$W_3$: Weight that represents how important it is for classes to avoid begining too early or ending too late in a day (soft constraint 11)
+$W_3$: Weight that represents how important it is for classes not to start too early (before 9:00 AM) or end too late (after 4:00 PM) in a day (soft constraint 11)
 $W_4$: Weight that a represents how important it is for faculty members to not lecture more than 2 consecutive classes (soft constraint 12)
 $W_5$: Weight that a represents how important it is for faculty members to not lecture consecutive classes in the afternoon (soft constraint 13)
 
 #### Decision Variables
-$a_{f,c,d,t}$: pairing of a course/faculty pair $(f,c)$ to a timeslot $t$ in day $d$.
+$a_{f,c,d,t}$: Assignment of a course-faculty pair $(f,c)$ to a time slot $t$ in day $d$.
 
-$y_{f,d,t}$: Number of consecutive classes over 2, starting at timeslot $t$ of day $d$, for faculty member $f$. Used for soft constraint 12
+$y_{f,d,t}$: Boolean variable that is true if there are more than two consecutive classes, starting at time slot $t$ of day $d$, for faculty member $f$. *Used for soft constraint 12*
 
-$z_{f,d,t}$: Number of consecutive classes in the afternoon, starting at timeslot $t$ of day $d$, for faculty member $f$. Used for soft constraint 13
+$z_{f,d,t}$: Boolean variable that is true if there are consecutive classes in the afternoon, starting at time slot $t$ of day $d$, for faculty member $f$. *Used for soft constraint 13*
 
 #### Objective Function
-Maximize
-$\displaystyle \sum_{f}\sum_{c}\sum_{d}\sum_{t} a_{f,c,d,t} P_{f,t} S_f - W_3 U - W_4 \sum_{f}\sum_{d}\sum_{t} y_{f,d,t} - W_5 \sum_{f}\sum_{d}\sum_{t} z_{f,d,t}$
+Maximize $\displaystyle \sum_{f}\sum_{c}\sum_{d}\sum_{t} a_{f,c,d,t} P_{f,t} S_f - W_3 U - W_4 \sum_{f}\sum_{d}\sum_{t} y_{f,d,t} - W_5 \sum_{f}\sum_{d}\sum_{t} z_{f,d,t}$
 
 #### Constraints
 ##### Hard Constraints
@@ -213,26 +212,26 @@ $a_{f,c,d,t} \in \{0, 1\}$
 $y_{f,d,t} \in \{0, 1\}$
 $z_{f,d,t} \in \{0, 1\}$
 
-8. **Each full-time faculty member can be teaching at most one course at one given timeslot**
+8. **Each full-time faculty member can be teaching at most one course on a given time slot**
 
 $\displaystyle \forall f, d, t: \sum_c a_{f,c,d,t} \leq 1$
 
-9. **A teacher must lecture exactly as many timeslots of a course as he was assigned in a previous stage**
+9. **A teacher must lecture exactly as many time slots of a course as he was assigned in a previous stage**
 
 $\displaystyle \forall f, c: \sum_d\sum_t a_{f,c,d,t} = R_{f,c}$
 
-Constraints 8 and 9 were added by us, because we need to keep the decision variables' semantics consistent with the values that they may take.
+We included Constraints 8 and 9 to keep the semantics of the decision variables consistent with the values that they may take.
 
 10. **At most three course classes can be assigned to the same class period**
 
 $\displaystyle \forall d,t: \sum_{f}\sum_{c} a_{f,c,d,t} \leq 3$
 
 ##### Soft Constraints
-11. **Most of the students and faculty preferred that their class day began later than 9:00 am and ended before 4:00 pm**
+11. **Most of the students and faculty prefer that their class day begins after 9:00 AM and ends before 4:00 PM**
 
 $\displaystyle U = \sum_{f} \sum_{c} \sum_{d}\left(\sum_{t:~T_t < 9:00}{a_{f,c,d,t}} + \sum_{t:~T_t+\Delta > 16:00}{a_{f,c,d,t}}\right)$
 
-*Note: $U$ is a temporary variable*
+*Note: $U$ is a temporary variable used solely in the definition of the objective function*
 
 12. **Avoid having instructors teach more than two consecutive class periods in a day**
 
@@ -244,7 +243,7 @@ $\displaystyle \forall f, d, \forall t < T-1 \wedge T_t \geq \text{12:00}: \sum_
 
 ## Results
 
-We used the following weights:
+Our solution used the following weights:
 
 $W_1 = 1$
 $W_2 = 4$
@@ -269,8 +268,8 @@ Objective Function = 446
 | Pedro           | 0    | 1    | 2    | 0    | 0    | 0    | 0    | 0    |
 | Queiros         | 0    | 3    | 0    | 0    | 0    | 0    | 0    | 0    |
 | Soeiro          | 0    | 0    | 0    | 0    | 0    | 3    | 0    | 0    |
-| contingent MWF  | 0    | 0    | 0    | 0    | 1    | 0    | 1    | 0    |
-| contingent TuTh | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    |
+| Contingent MWF  | 0    | 0    | 0    | 0    | 1    | 0    | 1    | 0    |
+| Contingent TuTh | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    |
 
 ### Scheduling Phase
 
@@ -320,4 +319,4 @@ The required reformulation would be somewhat simple, as we only need to use the 
 
 ### Enhancements
 
-An apparent problem with the final solutions found was that the schedules were denser on the first days of the sets. This is a known problem in the realm of scheduling optimization problems, and can be somewhat solved by imposing a soft constraint requiring all days in a schedule to have about the same number of classes. We however believe this constraint would make the problem non-linear when using a trivial implementation with the absolute value function.
+An apparent problem with the final solutions found was that the schedules were denser on the first days of the sets. This is a known problem in the realm of scheduling optimization problems, and can be somewhat solved by imposing a soft constraint requiring all days in a schedule to have about the same number of classes. However, we believe this constraint would make the problem non-linear when using a trivial implementation with the absolute value function.
