@@ -3,7 +3,8 @@
 {string} Faculty_MWF = {"Barbosa", "Castro", "Pedro", "Queiros", "contingent_MWF"};
 {string} Faculty_TuTh = {"Gerardo", "Lameiras", "Machado", "Soeiro", "contingent_TuTh"};
 
-float facultyLoad[Faculty] = [3, 2, 3, 3, 1, 3, 3, 3, 1000000000, 1000000000];
+float facultyLoad[Faculty] = [3, 2, 3, 3, 1, 3, 3, 3, 
+23, 23]; 								// M: Sum of the required number of classes for all courses. 
 float seniority[Faculty] = [2, 4, 3, 2, 10, 6, 6, 5, 1, 1];
 float courseLoad[Course] = [2, 6, 5, 1, 1, 6, 1, 1];
 float preference[Faculty][Course] = [
