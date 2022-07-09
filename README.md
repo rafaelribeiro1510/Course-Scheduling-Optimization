@@ -9,7 +9,7 @@
 - **Project grade:** 85/100%
 - **Group members:**
     - [Diogo Miguel Ferreira Rodrigues](https://github.com/dmfrodrigues) (<dmfrodrigues2000@gmail.com> / <diogo.rodrigues@fe.up.pt>)
-    - [Gonçalo José Cerqueira Pascoal](https://github.com/VenomPaco) ([up201806332@fe.up.pt](mailto:up201806332@fe.up.pt))
+    - [Gonçalo José Cerqueira Pascoal](https://github.com/VenomPaco) (<up201806332@fe.up.pt>)
     - [Rafael Soares Ribeiro](https://github.com/up201806330) (<up201806330@fe.up.pt>)
     
 ## Instalation
